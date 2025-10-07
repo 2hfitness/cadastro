@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Principal</title>
   <style>
     body {
@@ -13,46 +14,58 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
     }
 
     h1 {
       margin-bottom: 40px;
       color: #333;
+      text-align: center;
+      padding: 0 10px;
     }
 
     .btn-container {
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      width: 250px;
+      gap: 15px;
+      width: 90%;
+      max-width: 300px;
     }
 
     button {
       background: #28a745;
       color: white;
       border: none;
-      padding: 12px;
-      border-radius: 5px;
-      margin-top: 20px;
-      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 18px;
+      font-weight: bold;
+      transition: background 0.2s ease;
     }
+
     button:hover {
       background: #218838;
     }
-	
+
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 20px;
+        margin-bottom: 30px;
+      }
+      button {
+        font-size: 16px;
+        padding: 12px;
+      }
+    }
   </style>
 </head>
 <body>  
-  
   <h1>Selecione uma opção</h1>
 
   <div class="btn-container">
     <button onclick="window.location.href='mensalidade.html'">Mensalidade</button>
     <button onclick="window.location.href='cadastro.html'">Cadastro Novo</button>
   </div>
-
 </body>
 </html>
