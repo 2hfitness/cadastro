@@ -17,6 +17,9 @@
       max-width: 400px;
       margin: auto;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
     h2 {
       margin-bottom: 15px;
@@ -27,11 +30,14 @@
       margin: 15px 0 8px;
     }
     input[type="text"],
-    input[type="email"] {
+    input[type="email"],
+    input[type="date"],
+    input[type="tel"] {
       width: 100%;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      box-sizing: border-box;
     }
     .checkbox-group {
       margin: 5px 0 15px;
@@ -57,97 +63,59 @@
     button:hover {
       background: #218838;
     }
-	form {
-	  display: flex;
-	  flex-direction: column;
-	  gap: 5px;
-	}
-
-	form label {
-	  font-weight: bold;
-	  margin-bottom: 5px;
-	}
-
-	form input[type="text"],
-	form input[type="email"],
-	form input[type="date"],
-	form input[type="tel"] {
-	  width: 100%;
-	  padding: 8px;
-	  border: 1px solid #ccc;
-	  border-radius: 5px;
-	  box-sizing: border-box; /* 🔥 isso corrige a margem desigual */
-	}
-
   </style>
 </head>
 <body>
 
-	<form id="cadastroForm">
-	  <h2>Mensalidade</h2>
+  <form id="cadastroForm">
+    <h2>Mensalidade</h2>
 
-	  <label for="nome">Nome do Aluno:</label>
-	  <input type="text" id="nome" required>
+    <label for="nome">Nome do Aluno:</label>
+    <input type="text" id="nome" required>
 
+    <!-- 🔹 Campo adicionado -->
+    <label for="dataPagamento">Data de Pagamento:</label>
+    <input type="date" id="dataPagamento" required>
 
-	  <label>Valor:</label>
-	  <div class="checkbox-group">
-		<label><input type="radio" name="mensalidade" value="R$65,00" required> R$65,00</label><br>
-		<label><input type="radio" name="mensalidade" value="R$80,00" required> R$80,00</label>
-	  </div>
+    <label>Valor:</label>
+    <div class="checkbox-group">
+      <label><input type="radio" name="mensalidade" value="R$65,00" required> R$65,00</label><br>
+      <label><input type="radio" name="mensalidade" value="R$80,00" required> R$80,00</label>
+    </div>
 
-	  <label>Forma de pagamento:</label>
-	  <div class="checkbox-group">
-		<label><input type="radio" name="pagamento" value="Dinheiro" required> Dinheiro</label><br>
-		<label><input type="radio" name="pagamento" value="Pix" required> Pix</label>
-	  </div>
+    <label>Forma de pagamento:</label>
+    <div class="checkbox-group">
+      <label><input type="radio" name="pagamento" value="Dinheiro" required> Dinheiro</label><br>
+      <label><input type="radio" name="pagamento" value="Pix" required> Pix</label>
+    </div>
 
-	  <button type="submit">Enviar pelo WhatsApp</button>
-	  <button onclick="window.location.href='index.html'">Voltar</button>
-	</form>
-
+    <button type="submit">Enviar pelo WhatsApp</button>
+    <button type="button" onclick="window.location.href='index.html'">Voltar</button>
+  </form>
 
   <script>
-    // Máscara CPF
-    document.getElementById("cpf").addEventListener("input", function(e) {
-      let v = e.target.value.replace(/\D/g, "");
-      v = v.replace(/(\d{3})(\d)/, "$1.$2");
-      v = v.replace(/(\d{3})(\d)/, "$1.$2");
-      v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-      e.target.value = v;
-    });
-
-    // Máscara celular
-    document.getElementById("celular").addEventListener("input", function(e) {
-      let v = e.target.value.replace(/\D/g, "");
-      v = v.replace(/^(\d{2})(\d)/g, "($1)$2");
-      v = v.replace(/(\d{5})(\d)/, "$1-$2");
-      e.target.value = v;
-    });
-
-
     document.getElementById("cadastroForm").addEventListener("submit", function(e){
       e.preventDefault();
 
       const nome = document.getElementById("nome").value.trim();
+      const dataPagamento = document.getElementById("dataPagamento").value;
       const mensalidade = document.querySelector('input[name="mensalidade"]:checked');
-	  const pagamento = document.querySelector('input[name="pagamento"]:checked');
-	  
-	  if(!pagamento) {
-	    alert("Selecione a forma de pagamento!");
-	    return;
-	  }
-
-      if(!nome || !mensalidade) {
+      const pagamento = document.querySelector('input[name="pagamento"]:checked');
+      
+      if(!nome || !dataPagamento || !mensalidade || !pagamento) {
         alert("Preencha todos os campos!");
         return;
       }
 
+      // Formata a data (aaaa-mm-dd → dd/mm/aaaa)
+      const dataFormatada = new Date(dataPagamento).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+
       const mensagem = 
         `*Mensalidade:*\n\n` +
         `👤 Nome: ${nome}\n` +
-        `💰 Mensalidade: ${mensalidade.value}` +
-		`💳 Forma de pagamento: ${pagamento.value}`;
+        `📅 Data de Pagamento: ${dataFormatada}\n` +
+        `💰 Valor: ${mensalidade.value}\n` +
+        `💳 Forma de pagamento: ${pagamento.value}`;
 
       const telefone = "5524999522320"; 
       const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
@@ -157,4 +125,3 @@
 
 </body>
 </html>
-
